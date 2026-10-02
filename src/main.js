@@ -8,16 +8,39 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 /* ---------- UI (funciona mesmo sem WebGL) ---------- */
-const maxScroll=()=>Math.max(1,document.documentElement.scrollHeight-innerHeight);
-const goTo=p=>scrollTo({top:p*maxScroll(),behavior:reduce?'auto':'smooth'});
-document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>goTo(+b.dataset.go)));
-document.querySelectorAll('#rail button').forEach(b=>b.addEventListener('click',()=>goTo(+b.dataset.p)));
+const sceneEl=document.querySelector('.scene');
+const trackLen=()=>Math.max(1,sceneEl.offsetHeight-innerHeight);   // rolagem que conduz a animação
+const goTo=p=>scrollTo({top:sceneEl.offsetTop+p*trackLen(),behavior:reduce?'auto':'smooth'});
+document.querySelectorAll('#rail button').forEach(b=>b.addEventListener('click',()=>{
+  if(b.dataset.target)document.getElementById(b.dataset.target).scrollIntoView({behavior:reduce?'auto':'smooth'});
+  else goTo(+b.dataset.p);
+}));
 document.getElementById('showMail').addEventListener('click',()=>{document.getElementById('mail').hidden=false});
 document.getElementById('copyMail').addEventListener('click',async e=>{
   const t=document.getElementById('mailText').textContent;
   try{await navigator.clipboard.writeText(t);e.target.textContent='Copiado'}
   catch{const r=document.createRange();r.selectNodeContents(document.getElementById('mailText'));const s=getSelection();s.removeAllRanges();s.addRange(r);e.target.textContent='Selecionado'}
 });
+
+// títulos: cada palavra vira um span, para subir uma a uma conforme a rolagem
+document.querySelectorAll('.split').forEach(el=>{
+  const palavras=el.textContent.trim().split(/\s+/);
+  el.setAttribute('aria-label',el.textContent.trim());
+  el.innerHTML=palavras.map((w,i)=>`<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
+});
+
+// blocos do site: entram pelos lados, alternando, quando aparecem na tela
+const revelar=[...document.querySelectorAll('[data-reveal]')];
+revelar.forEach((el,i)=>el.style.setProperty('--side',i%2?1:-1));
+if('IntersectionObserver' in window){
+  document.documentElement.classList.add('reveal-on');
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.18,rootMargin:'0px 0px -6% 0px'});
+  revelar.forEach(el=>io.observe(el));
+}
+// luz que segue o cursor nos cards
+document.querySelectorAll('.card').forEach(c=>c.addEventListener('pointermove',e=>{
+  const r=c.getBoundingClientRect();c.style.setProperty('--mx',`${e.clientX-r.left}px`);c.style.setProperty('--my',`${e.clientY-r.top}px`);
+}));
 
 /* ---------- renderer ---------- */
 const canvas=document.getElementById('stage');
@@ -197,15 +220,21 @@ function shots(intro){
   const a=camera.aspect,portrait=a<.85,widePanel=a>1.25;
   const A=portrait?wide(V(0.7,1.25,-0.2),V(0.12,0.34,1),5.2,3.0,1.0):wide(V(widePanel?-0.55:0.3,1.5,-0.2),V(0.12,0.34,1),6.4,3.4,0.9);
   A.pos.add(V(0,0.4,1.6).multiplyScalar(1-intro));
-  const lapC=closeUp(lapScreen,2.74,1.7125,portrait?.94:widePanel?.72:.84,widePanel?0.42:0,portrait?0.12:0);
-  const phC=closeUp(phoneFocus||phoneScreen,SW,SH,portrait?.66:.8,widePanel?0.36:0,portrait?0.28:0);
+  // aparelho de um lado, texto do outro: lateral > 0 joga a tela para a direita
+  // tela ocupa ~metade da largura e fica deslocada para o lado oposto ao texto
+  const ladoL=widePanel?0.86:0, ladoP=widePanel?0.5:0;
+  const lapFill=portrait?.94:widePanel?.5:.84, lapLift=portrait?0.12:0;
+  const lapDir=closeUp(lapScreen,2.74,1.7125,lapFill,ladoL,lapLift);     // loja: notebook à direita
+  const lapEsq=closeUp(lapScreen,2.74,1.7125,lapFill,-ladoL,lapLift);    // destino: notebook à esquerda
+  const phEsq=closeUp(phoneFocus||phoneScreen,SW,SH,portrait?.66:.8,-ladoP,portrait?0.28:0);  // app: celular à esquerda
   return [
     {p:0,...A},
-    {p:.12,...wide(V(-0.4,0.85,-0.4),V(-0.4,0.28,1),4.6,2.6,0.9)},
-    {p:.24,...lapC},{p:.5,...lapC},
-    {p:.6,...wide(V(0.95,0.85,-0.1),V(0.18,0.24,1),5.6,2.6,0.9)},
-    {p:.72,...phC},{p:.92,...phC},
-    {p:1,...wide(V(0.65,0.95,-0.2),V(0,0.55,1),6.6,3.2,0.72)},
+    {p:.12,...wide(V(-0.4,1.8,-0.4),V(-0.4,0.28,1),4.6,3.4,0.9)},   // aparelhos mais baixos: frase no alto
+    {p:.24,...lapDir},{p:.36,...lapDir},
+    {p:.39,...lapEsq},{p:.5,...lapEsq},
+    {p:.6,...wide(V(0.95,1.8,-0.1),V(0.18,0.24,1),5.6,3.4,0.9)},
+    {p:.72,...phEsq},{p:.92,...phEsq},
+    {p:1,...wide(V(0.65,1.95,-0.2),V(0,0.4,1),6.6,4.2,0.8)},
   ];
 }
 function camTarget(p,intro){
@@ -220,26 +249,36 @@ const railBtns=[...document.querySelectorAll('#rail button')];
 const bar=document.getElementById('progress');
 let pTarget=0,pSmooth=0,last=performance.now(),start=last;
 const camPos=new THREE.Vector3(),camLook=new THREE.Vector3();let first=true;
-function onScroll(){pTarget=clamp(scrollY/maxScroll())}
+let stageVisivel=true;
+function onScroll(){
+  const y=scrollY-sceneEl.offsetTop;
+  pTarget=clamp(y/trackLen());
+  stageVisivel=y<trackLen()+innerHeight;          // depois disso o palco já saiu da tela
+}
 addEventListener('scroll',onScroll,{passive:true});
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();onScroll()}
 addEventListener('resize',resize);resize();
 
+const secoes=[...railBtns].filter(b=>b.dataset.target).map(b=>document.getElementById(b.dataset.target));
 function updateUI(p){
-  bar.style.transform=`scaleX(${p})`;
+  const doc=document.documentElement;
+  bar.style.transform=`scaleX(${clamp(scrollY/Math.max(1,doc.scrollHeight-innerHeight))})`;
   for(const el of chapters){
     const a=+el.dataset.in,b=+el.dataset.out;
-    const o=(a<0?1:range(p,a-.03,a))*(1-range(p,b,b+.03));
-    el.style.opacity=o;el.style.visibility=o<.01?'hidden':'visible';
-    const base=el.classList.contains('cta')?'translate(-50%,-50%) ':el.classList.contains('bridge')?'translateX(-50%) ':'';
-    el.style.transform=base+`translateY(${(1-o)*14}px)`;
+    const o=(a<0?1:range(p,a-.035,a))*(1-range(p,b,b+.03));
+    el.style.setProperty('--o',o.toFixed(3));
+    el.style.opacity=Math.min(1,o*1.6).toFixed(3);
+    el.style.visibility=o<.01?'hidden':'visible';
   }
   document.querySelector('.hint').style.opacity=1-range(p,0,.04);
-  const idx=p<.2?0:p<.375?1:p<.6?2:p<.94?3:4;
+  // item ativo do trilho: capítulos da vitrine ou seções do site
+  let idx=p<.2?0:p<.375?1:p<.6?2:3;
+  secoes.forEach((sec,i)=>{if(sec.getBoundingClientRect().top<innerHeight*.5)idx=4+i});
   railBtns.forEach((b,i)=>b.classList.toggle('on',i===idx));
 }
 
 function frame(now){
+  if(!stageVisivel&&!first){last=now;requestAnimationFrame(frame);updateUI(pSmooth);return}
   const dt=Math.min(.05,(now-last)/1000);last=now;const t=(now-start)/1000;
   pSmooth=reduce?pTarget:pSmooth+(pTarget-pSmooth)*(1-Math.exp(-dt*7));
   const p=pSmooth;

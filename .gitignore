@@ -1,3 +1,12 @@
 node_modules/
 dist/
 .DS_Store
+Thumbs.db
+
+# backups automáticos do Blender e renders de teste
+*.blend1
+blender/diag_*.png
+__pycache__/
+
+# pasta criada pelo app do Claude, fora do projeto
+Claude outputs/

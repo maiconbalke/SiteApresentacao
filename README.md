@@ -16,7 +16,7 @@ Requer Node 18 ou mais recente.
 ## Estrutura
 
 ```
-index.html          marcação dos capítulos, navegação e trilho lateral
+index.html          vitrine 3D (capítulos) e o site que vem depois: serviços, processo, contato e rodapé
 src/main.js         cena three.js, modelos, luzes, câmera guiada pela rolagem e laço de animação
 src/screens.js      conteúdo desenhado nas telas (editor de código, loja, site de destino, bloqueio e app)
 src/utils.js        funções de interpolação e easing
@@ -39,6 +39,10 @@ O progresso da rolagem vira um número de 0 a 1, suavizado a cada quadro. A fun�
 | 0,60 | recuo | — |
 | 0,72 a 0,92 | close no celular | tela de bloqueio, depois app |
 | 1,00 | plano final | chamada para contato |
+
+A página tem duas partes. A primeira é a seção `.scene` (900vh de altura) com o palco preso na tela (`position: sticky`): é nela que a rolagem conduz a câmera. Quando ela termina, o palco sobe junto com a página e entra o site em fluxo normal (`main.after`): cards de serviços, como trabalhamos, contato e rodapé. A renderização 3D para enquanto o palco está fora da tela.
+
+Na vitrine, a composição alterna de lado a cada capítulo, como em sites de produto: na loja o texto fica à esquerda e o notebook à direita; no site de destino a câmera desliza e inverte os lados; no app o celular vai para a esquerda. O lado de cada capítulo é a classe `side left`, `side right` ou `center` no `index.html`, e o deslocamento do aparelho é o parâmetro `lateral` das tomadas em `shots()` (positivo joga a tela para a direita). Títulos com a classe `split` sobem palavra por palavra conforme a rolagem, e voltam se ela voltar. No site, blocos com `data-reveal` entram pelos lados, alternando.
 
 Os textos de cada capítulo usam `data-in` e `data-out` no `index.html` com os mesmos valores. Para mudar o ritmo, ajuste os números em `shots()`, os intervalos das telas no laço `frame()` e os atributos dos capítulos juntos. A altura total da rolagem está em `.track { height: 900vh }`, no CSS.
 

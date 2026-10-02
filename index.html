@@ -10,66 +10,170 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;700&display=swap">
 </head>
 <body>
-<canvas id="stage" aria-hidden="true"></canvas>
 <div class="progress" id="progress"></div>
 
 <header class="topbar">
-  <div class="brand"><i></i>Estúdio Kernel</div>
-  <button class="btn ghost" type="button" data-go="1">Fale com a gente</button>
+  <a class="brand" href="#topo"><i></i>Estúdio Kernel</a>
+  <a class="btn ghost" href="#contato">Fale com a gente</a>
 </header>
 
-<main class="track" id="track">
-  <section class="chapter hero" data-in="-1" data-out="0.085">
-    <div class="eyebrow">Software house · web · mobile · sistemas</div>
-    <h1>Construímos o que seus clientes usam todos os dias.</h1>
-    <p>Lojas virtuais, sites de destino e aplicativos, do protótipo à publicação. Role a página para ver por dentro.</p>
+<!-- 1. Vitrine 3D: o palco fica preso na tela enquanto a rolagem conduz a câmera -->
+<section class="scene" id="topo" aria-label="Apresentação">
+  <div class="stage">
+    <canvas id="stage" aria-hidden="true"></canvas>
+
+    <div class="chapter hero" data-in="-1" data-out="0.085">
+      <div class="eyebrow">Software house · web · mobile · sistemas</div>
+      <h1 class="split">Construímos o que seus clientes usam todos os dias.</h1>
+      <p>Lojas virtuais, sites de destino e aplicativos, do protótipo à publicação. Role a página para ver por dentro.</p>
+    </div>
+
+    <div class="chapter center up" data-in="0.13" data-out="0.205">
+      <p class="statement split">Design, código e performance no mesmo time.</p>
+    </div>
+
+    <div class="chapter side left" data-in="0.25" data-out="0.355" style="--dir:-1">
+      <div class="eyebrow">01 / Loja virtual</div>
+      <h2 class="split">E-commerce feito para vender</h2>
+      <p>Catálogo, carrinho e checkout com Pix e cartão. Carrega rápido no 4G e o time edita produtos sem chamar o dev.</p>
+      <ul class="tags"><li>Next.js</li><li>Checkout Pix</li><li>CMS headless</li></ul>
+    </div>
+
+    <div class="chapter side right" data-in="0.395" data-out="0.49" style="--dir:1">
+      <div class="eyebrow">02 / Site de destino</div>
+      <h2 class="split">Lugares que dá vontade de visitar</h2>
+      <p>Páginas de turismo, pousadas e eventos com fotografia em primeiro plano, roteiros, mapas e reserva integrada.</p>
+      <ul class="tags"><li>Astro</li><li>Mapas</li><li>Motor de reservas</li></ul>
+    </div>
+
+    <div class="chapter center up" data-in="0.545" data-out="0.645">
+      <p class="statement split">E o mesmo produto também cabe no bolso.</p>
+    </div>
+
+    <div class="chapter side right" data-in="0.72" data-out="0.9" style="--dir:1">
+      <div class="eyebrow">03 / Aplicativo</div>
+      <h2 class="split">Apps para iOS e Android com uma base só</h2>
+      <p>Notificações, login social, pagamentos e modo offline. Publicamos nas lojas e cuidamos das atualizações.</p>
+      <ul class="tags"><li>React Native</li><li>Push</li><li>API própria</li></ul>
+    </div>
+
+    <div class="chapter center up" data-in="0.955" data-out="9">
+      <p class="statement split">Isso é só uma amostra.</p>
+      <a class="more" href="#servicos">Veja tudo o que construímos <span aria-hidden="true">↓</span></a>
+    </div>
+
+    <div class="hint" aria-hidden="true">Role<span></span></div>
+  </div>
+</section>
+
+<!-- 2. Site em fluxo normal depois da animação -->
+<main class="after">
+  <section class="services" id="servicos" aria-labelledby="t-servicos">
+    <header class="sec-head">
+      <div class="eyebrow">O que construímos</div>
+      <h2 id="t-servicos" class="big">Do site ao sistema que roda a sua operação.</h2>
+      <p>Um time só para desenhar, desenvolver, publicar e manter. Escolha por onde começar.</p>
+    </header>
+
+    <div class="cards">
+      <article class="card c-wide" data-reveal>
+        <div class="viz" aria-hidden="true">
+          <svg viewBox="0 0 240 140"><rect x="8" y="8" width="224" height="124" rx="10" class="s-line"/><circle cx="24" cy="22" r="3.5" class="s-dim"/><circle cx="36" cy="22" r="3.5" class="s-dim"/><circle cx="48" cy="22" r="3.5" class="s-dim"/><rect x="20" y="44" width="104" height="14" rx="4" class="s-fill"/><rect x="20" y="64" width="80" height="8" rx="4" class="s-dim"/><rect x="20" y="80" width="54" height="16" rx="8" class="s-acc"/><rect x="140" y="40" width="80" height="78" rx="8" class="s-soft"/></svg>
+        </div>
+        <h3>Sites e landing pages</h3>
+        <p>Sites institucionais, páginas de campanha e portfólios rápidos, bem ranqueados no Google e fáceis de atualizar.</p>
+        <ul class="deliv"><li>SEO técnico</li><li>CMS</li><li>Analytics</li></ul>
+      </article>
+
+      <article class="card c-wide" data-reveal>
+        <div class="viz" aria-hidden="true">
+          <svg viewBox="0 0 240 140"><rect x="16" y="24" width="60" height="76" rx="8" class="s-soft"/><rect x="90" y="24" width="60" height="76" rx="8" class="s-soft"/><rect x="164" y="24" width="60" height="76" rx="8" class="s-soft"/><rect x="16" y="108" width="40" height="8" rx="4" class="s-dim"/><rect x="90" y="108" width="40" height="8" rx="4" class="s-dim"/><rect x="164" y="108" width="40" height="8" rx="4" class="s-dim"/><circle cx="46" cy="58" r="16" class="s-acc"/><circle cx="120" cy="58" r="16" class="s-line"/><circle cx="194" cy="58" r="16" class="s-line"/><circle cx="222" cy="20" r="11" class="s-acc"/><text x="222" y="24.5" text-anchor="middle" class="s-txt">2</text></svg>
+        </div>
+        <h3>Lojas virtuais</h3>
+        <p>E-commerce com catálogo, frete, Pix, cartão e painel de pedidos. Integração com ERP e marketplaces.</p>
+        <ul class="deliv"><li>Checkout</li><li>Pagamentos</li><li>Estoque</li></ul>
+      </article>
+
+      <article class="card" data-reveal>
+        <div class="viz" aria-hidden="true">
+          <svg viewBox="0 0 240 140"><rect x="88" y="6" width="64" height="128" rx="14" class="s-line"/><rect x="108" y="13" width="24" height="6" rx="3" class="s-dim"/><rect x="98" y="30" width="44" height="22" rx="6" class="s-acc"/><rect x="98" y="58" width="44" height="12" rx="4" class="s-soft"/><rect x="98" y="74" width="44" height="12" rx="4" class="s-soft"/><rect x="98" y="90" width="44" height="12" rx="4" class="s-soft"/><rect x="108" y="122" width="24" height="3" rx="1.5" class="s-dim"/></svg>
+        </div>
+        <h3>Aplicativos mobile</h3>
+        <p>Apps para iOS e Android com uma base de código, publicados nas lojas e com atualizações contínuas.</p>
+        <ul class="deliv"><li>iOS</li><li>Android</li><li>Push</li></ul>
+      </article>
+
+      <article class="card" data-reveal>
+        <div class="viz" aria-hidden="true">
+          <svg viewBox="0 0 240 140"><rect x="8" y="8" width="224" height="124" rx="10" class="s-line"/><rect x="8" y="8" width="44" height="124" rx="10" class="s-soft"/><rect x="66" y="24" width="70" height="30" rx="6" class="s-soft"/><rect x="146" y="24" width="72" height="30" rx="6" class="s-soft"/><rect x="72" y="104" width="14" height="16" rx="2" class="s-dim"/><rect x="94" y="88" width="14" height="32" rx="2" class="s-dim"/><rect x="116" y="96" width="14" height="24" rx="2" class="s-dim"/><rect x="138" y="72" width="14" height="48" rx="2" class="s-acc"/><rect x="160" y="80" width="14" height="40" rx="2" class="s-dim"/><rect x="182" y="66" width="14" height="54" rx="2" class="s-dim"/></svg>
+        </div>
+        <h3>Sistemas e plataformas web</h3>
+        <p>Painéis, portais e SaaS sob medida para a rotina da empresa, com login, permissões e relatórios.</p>
+        <ul class="deliv"><li>Dashboards</li><li>APIs</li><li>Integrações</li></ul>
+      </article>
+
+      <article class="card" data-reveal>
+        <div class="viz" aria-hidden="true">
+          <svg viewBox="0 0 240 140"><line x1="120" y1="70" x2="50" y2="34" class="s-edge"/><line x1="120" y1="70" x2="190" y2="34" class="s-edge"/><line x1="120" y1="70" x2="50" y2="106" class="s-edge"/><line x1="120" y1="70" x2="190" y2="106" class="s-edge"/><line x1="50" y1="34" x2="190" y2="34" class="s-edge dash"/><circle cx="120" cy="70" r="18" class="s-acc"/><circle cx="50" cy="34" r="11" class="s-line"/><circle cx="190" cy="34" r="11" class="s-line"/><circle cx="50" cy="106" r="11" class="s-line"/><circle cx="190" cy="106" r="11" class="s-line"/></svg>
+        </div>
+        <h3>Consultoria e arquitetura</h3>
+        <p>Diagnóstico técnico, desenho de arquitetura e plano de evolução para sistemas que precisam crescer sem quebrar.</p>
+        <ul class="deliv"><li>Arquitetura</li><li>Code review</li><li>Roadmap</li></ul>
+      </article>
+
+      <article class="card c-full" data-reveal>
+        <div class="viz" aria-hidden="true">
+          <svg viewBox="0 0 240 140"><rect x="20" y="20" width="90" height="22" rx="5" class="s-soft"/><rect x="20" y="50" width="90" height="22" rx="5" class="s-soft"/><rect x="20" y="80" width="90" height="22" rx="5" class="s-soft"/><circle cx="34" cy="31" r="3.5" class="s-acc"/><circle cx="34" cy="61" r="3.5" class="s-acc"/><circle cx="34" cy="91" r="3.5" class="s-acc"/><polyline points="128,96 146,88 162,92 178,70 196,74 220,46" class="s-trend"/><line x1="128" y1="110" x2="222" y2="110" class="s-edge"/></svg>
+        </div>
+        <div class="c-body">
+          <h3>Cloud e sustentação</h3>
+          <p>Infraestrutura na nuvem, deploy automatizado, monitoramento e suporte. Seu produto no ar, rápido e seguro, enquanto você cuida do negócio.</p>
+          <ul class="deliv"><li>AWS</li><li>CI/CD</li><li>Monitoramento</li><li>Suporte</li></ul>
+        </div>
+      </article>
+    </div>
   </section>
 
-  <section class="chapter panel" data-in="0.25" data-out="0.355">
-    <div class="eyebrow">01 / Loja virtual</div>
-    <h2>E-commerce feito para vender</h2>
-    <p>Catálogo, carrinho e checkout com Pix e cartão. Carrega rápido no 4G e o time edita produtos sem chamar o dev.</p>
-    <ul class="tags"><li>Next.js</li><li>Checkout Pix</li><li>CMS headless</li></ul>
+  <section class="process" id="processo" aria-labelledby="t-processo">
+    <header class="sec-head">
+      <div class="eyebrow">Como trabalhamos</div>
+      <h2 id="t-processo" class="big">Do primeiro papo à publicação, sem surpresa no caminho.</h2>
+    </header>
+    <ol class="steps">
+      <li data-reveal><span class="n">01</span><h3>Imersão</h3><p>Entendemos o negócio, quem vai usar e o que precisa dar certo.</p></li>
+      <li data-reveal><span class="n">02</span><h3>Protótipo</h3><p>Você navega pelas telas antes de qualquer linha de código.</p></li>
+      <li data-reveal><span class="n">03</span><h3>Desenvolvimento</h3><p>Entregas em ciclos curtos, com versão de teste sempre no ar.</p></li>
+      <li data-reveal><span class="n">04</span><h3>Publicação e evolução</h3><p>Colocamos no ar, medimos o uso e seguimos melhorando.</p></li>
+    </ol>
   </section>
 
-  <section class="chapter panel" data-in="0.395" data-out="0.49">
-    <div class="eyebrow">02 / Site de destino</div>
-    <h2>Lugares que dá vontade de visitar</h2>
-    <p>Páginas de turismo, pousadas e eventos com fotografia em primeiro plano, roteiros, mapas e reserva integrada.</p>
-    <ul class="tags"><li>Astro</li><li>Mapas</li><li>Motor de reservas</li></ul>
-  </section>
-
-  <section class="chapter bridge" data-in="0.545" data-out="0.645">
-    <p>E o mesmo produto também cabe no bolso.</p>
-  </section>
-
-  <section class="chapter panel" data-in="0.72" data-out="0.9">
-    <div class="eyebrow">03 / Aplicativo</div>
-    <h2>Apps para iOS e Android com uma base só</h2>
-    <p>Notificações, login social, pagamentos e modo offline. Publicamos nas lojas e cuidamos das atualizações.</p>
-    <ul class="tags"><li>React Native</li><li>Push</li><li>API própria</li></ul>
-  </section>
-
-  <section class="chapter cta" data-in="0.955" data-out="2">
+  <section class="contact" id="contato" aria-labelledby="t-contato">
     <div class="eyebrow">Próximo projeto</div>
-    <h2>Vamos construir o seu?</h2>
+    <h2 id="t-contato" class="huge">Vamos construir o seu?</h2>
     <p>Conte o que você precisa. Respondemos em um dia útil com um caminho e uma estimativa.</p>
     <div class="row">
       <button class="btn" type="button" id="showMail">Ver e-mail de contato</button>
-      <button class="btn ghost" type="button" data-go="0">Ver de novo</button>
+      <a class="btn ghost" href="#topo">Ver a apresentação de novo</a>
     </div>
     <div class="mail" id="mail" hidden><code id="mailText">contato@estudiokernel.com.br</code><button class="btn ghost" type="button" id="copyMail">Copiar</button></div>
   </section>
+
+  <footer class="foot">
+    <div class="foot-row">
+      <span>© 2026 Estúdio Kernel</span>
+      <nav aria-label="Rodapé"><a href="#servicos">Serviços</a><a href="#processo">Processo</a><a href="#contato">Contato</a></nav>
+    </div>
+    <div class="wordmark" aria-hidden="true">Kernel</div>
+  </footer>
 </main>
 
-<div class="hint" aria-hidden="true">Role<span></span></div>
-
-<ul class="rail" id="rail" aria-label="Capítulos">
+<ul class="rail" id="rail" aria-label="Seções">
   <li><button type="button" data-p="0"><span>Início</span><b></b></button></li>
   <li><button type="button" data-p="0.30"><span>Loja</span><b></b></button></li>
   <li><button type="button" data-p="0.445"><span>Destino</span><b></b></button></li>
   <li><button type="button" data-p="0.81"><span>App</span><b></b></button></li>
-  <li><button type="button" data-p="1"><span>Contato</span><b></b></button></li>
+  <li><button type="button" data-target="servicos"><span>Serviços</span><b></b></button></li>
+  <li><button type="button" data-target="contato"><span>Contato</span><b></b></button></li>
 </ul>
 
 <script type="module" src="/src/main.js"></script>
